@@ -19,8 +19,9 @@ Usuario o contraseña incorrectos.
 </div>
 {% endfor %}
 {% endif %}
-<form method="POST" class="profile-edit-form">
+<form method="POST" action="{% url 'home:login' %}" class="profile-edit-form">
 {% csrf_token %}
+
 <div class="profile-form-row">
 <label for="username">Usuario</label>
 <input type="text" id="username" name="username" required>

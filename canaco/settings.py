@@ -79,17 +79,16 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'canaco',
         'USER': 'root',
-        'PASSWORD': '12345',
+        'PASSWORD': '', 
         'HOST': 'localhost',
-        'PORT': '3306',
+        'PORT': '3307', 
         'OPTIONS': {
             'charset': 'utf8mb4',
             'use_unicode': True,
-            "init_command": "SET NAMES utf8mb4; SET sql_mode='STRICT_TRANS_TABLES', default_storage_engine=INNODB",
-        },
+            'init_command': "SET NAMES utf8mb4; SET sql_mode='STRICT_TRANS_TABLES'",
+        }
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
