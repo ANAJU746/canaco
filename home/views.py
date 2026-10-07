@@ -266,4 +266,4 @@ def eliminar_usuario(request, pk):
     usuario = get_object_or_404(User, pk=pk)
     if request.method == 'POST' and usuario != request.user:
         usuario.delete()
-    return redirect('home:crud_usuarios')
+    return redirect('home:crud_usuarios') 
