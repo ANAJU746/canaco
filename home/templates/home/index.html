@@ -4,21 +4,39 @@
 {% block content %}
 <section class="home-carousel-section bg-light">
 <div id="homeCarousel" class="carousel slide home-carousel" data-bs-ride="carousel">
+{% if slider %}
 <div class="carousel-indicators">
-<button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="0" class="active" aria-current="" aria-label="Noticia "></button>
+{% for noticia in slider %}
+<button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" {% if forloop.first %}aria-current="true"{% endif %} aria-label="Noticia {{ forloop.counter }}"></button>
+{% endfor %}
 </div>
+{% endif %}
 <div class="carousel-inner">
-<div class="carousel-item active" data-bs-interval="4500">
-<a href="" class="home-carousel-link">
-<img src="{% static 'images/hero_1.jpg' %}" class="d-block w-100 home-carousel-image" style="height: 400px; object-fit: cover; object-position: center;" alt="titulo">
+{% for noticia in slider %}
+<div class="carousel-item {% if forloop.first %}active{% endif %}" data-bs-interval="4500">
+<a href="{% url 'home:noticia_detalle' noticia.pk %}" class="home-carousel-link">
+{% if noticia.imagen_portada %}
+<img src="{{ noticia.imagen_portada.display_url }}" class="d-block w-100 home-carousel-image" style="height: 400px; object-fit: cover; object-position: center;" alt="{{ noticia.titulo }}">
+{% else %}
+<img src="{% static 'images/hero_1.jpg' %}" class="d-block w-100 home-carousel-image" style="height: 400px; object-fit: cover; object-position: center;" alt="{{ noticia.titulo }}">
+{% endif %}
 <div class="carousel-caption home-carousel-caption text-start">
-<span>Fecha de la noticia</span>
-<h2>Titulo de la noticia</h2>
-<p>Resumen de la noticia</p>
+<span>{{ noticia.createdat|date:"Y-m-d" }}</span>
+<h2>{{ noticia.titulo }}</h2>
+<p>{{ noticia.resumen }}</p>
+</div>
 </a>
 </div>
+{% empty %}
+<div class="carousel-item active">
+<img src="{% static 'images/hero_1.jpg' %}" class="d-block w-100 home-carousel-image" style="height: 400px; object-fit: cover; object-position: center;" alt="Noticias">
+<div class="carousel-caption home-carousel-caption text-start">
+<h2>Aún no hay noticias publicadas</h2>
 </div>
 </div>
+{% endfor %}
+</div>
+{% if slider|length > 1 %}
 <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
 <span class="visually-hidden">Anterior</span>
@@ -27,6 +45,7 @@
 <span class="carousel-control-next-icon" aria-hidden="true"></span>
 <span class="visually-hidden">Siguiente</span>
 </button>
+{% endif %}
 </div>
 </section>
 <section class="section recent-news-section">
@@ -34,32 +53,38 @@
 <div class="row mb-4 justify-content-center">
 <div class="col-lg-8 text-center">
 <h2 class="posts-entry-title">Noticias recientes</h2>
-<a href="#" class="read-more">Ver todas</a>
+<a href="{% url 'home:categoria' %}" class="read-more">Ver noticias por categoría</a>
 </div>
 </div>
 <div class="row justify-content-center">
+{% for noticia in publicaciones %}
 <div class="col-lg-4 mb-4">
 <div class="post-entry-alt">
-<a href="{% url 'home:noticia' %}" class="img-link" >
-{% comment %} <img src="" alt="titulo" class="img-fluid publication-card-image" style="height: 200px; width: 100%; object-fit: cover; object-position: center;"> {% endcomment %}
-<img src="{% static 'images/img_1_horizontal.jpg' %}" alt="titulo" class="img-fluid publication-card-image" style="height: 200px; width: 100%; object-fit: cover; object-position: center;">
+<a href="{% url 'home:noticia_detalle' noticia.pk %}" class="img-link">
+{% if noticia.imagen_portada %}
+<img src="{{ noticia.imagen_portada.display_url }}" alt="{{ noticia.titulo }}" class="img-fluid publication-card-image" style="height: 200px; width: 100%; object-fit: cover; object-position: center;">
+{% else %}
+<img src="{% static 'images/img_1_horizontal.jpg' %}" alt="{{ noticia.titulo }}" class="img-fluid publication-card-image" style="height: 200px; width: 100%; object-fit: cover; object-position: center;">
+{% endif %}
 </a>
 <div class="excerpt">
-<h2><a href="{% url 'home:noticia' %}">titulo</a></h2>
+<h2><a href="{% url 'home:noticia_detalle' noticia.pk %}">{{ noticia.titulo }}</a></h2>
 <div class="post-meta align-items-center text-left clearfix">
-<span>Fecha</span>
-<span>&nbsp;-&nbsp;Sin categoría</span>
+<span>{{ noticia.createdat|date:"Y-m-d" }}</span>
+<span>&nbsp;-&nbsp;{% if noticia.categoria %}{{ noticia.categoria.nombre }}{% else %}Sin categoría{% endif %}</span>
 </div>
-<p>Resumen de la noticia</p>
-<p><a href="{% url 'home:noticia' %}" class="read-more">
-<small>Visitas: 24</small>
+<p>{{ noticia.resumen }}</p>
+<p><a href="{% url 'home:noticia_detalle' noticia.pk %}" class="read-more">
+<small>Visitas: {{ noticia.visitas }}</small>
 <br>Saber más</a></p>
 </div>
 </div>
 </div>
+{% empty %}
 <div class="col-12">
 <p>No hay noticias publicadas todavía.</p>
 </div>
+{% endfor %}
 </div>
 </div>
 </section>

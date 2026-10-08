@@ -1,36 +1,45 @@
 {% extends 'partials/base.html' %}
 {% load static %}
-{% block title %} Categorías {% endblock %}
+{% block title %}{% if categoria_actual %}{{ categoria_actual.nombre }}{% else %}Categorías{% endif %}{% endblock %}
 {% block content %}
 <section class="section">
 <div class="container">
 <div class="row mb-4">
 <div class="col-lg-8">
 <h2 class="posts-entry-title">
-Categoría: Tecnología
+{% if categoria_actual %}Categoría: {{ categoria_actual.nombre }}{% else %}Noticias por categoría{% endif %}
 </h2>
 </div>
 <div class="col-lg-4">
-<select class="form-control" onchange="">
-<option value="categorias">Todas las categorías</option>
-<option value="tecnologia">Tecnología</option>
+<select class="form-control" onchange="if (this.value) window.location.href=this.value;">
+<option value="{% url 'home:categoria' %}" {% if not categoria_actual %}selected{% endif %}>Todas las categorías</option>
+{% for categoria in categorias %}
+<option value="{% url 'home:categoria_detalle' categoria.pk %}" {% if categoria_actual.pk == categoria.pk %}selected{% endif %}>{{ categoria.nombre }}</option>
+{% endfor %}
 </select>
 </div>
 </div>
+{% for publicacion in publicaciones %}
 <div class="row mb-5 align-items-center">
 <div class="col-lg-3">
-<a href="{% url 'home:noticia' %}" class="img-link">
-<img src="{%static 'images/hero_1.jpg' %}" alt="titulo" class="img-fluid category-post-image">
+<a href="{% url 'home:noticia_detalle' publicacion.pk %}" class="img-link">
+{% if publicacion.imagen_portada %}
+<img src="{{ publicacion.imagen_portada.display_url }}" alt="{{ publicacion.titulo }}" class="img-fluid category-post-image">
+{% else %}
+<img src="{% static 'images/hero_1.jpg' %}" alt="{{ publicacion.titulo }}" class="img-fluid category-post-image">
+{% endif %}
 </a>
 </div>
 <div class="col-lg-8">
-<span class="date">Fecha &bullet; Categoria</span>
-<h2><a href="{% url 'home:noticia' %}">Titulo de la noticia</a></h2>
-<p>Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500</p>
-<p><a href="{% url 'home:noticia' %}" class="btn btn-sm btn-outline-primary">Leer más</a></p>
+<span class="date">{{ publicacion.createdat|date:"Y-m-d" }}{% if publicacion.categoria %} &bullet; {{ publicacion.categoria.nombre }}{% endif %}</span>
+<h2><a href="{% url 'home:noticia_detalle' publicacion.pk %}">{{ publicacion.titulo }}</a></h2>
+<p>{{ publicacion.resumen }}</p>
+<p><a href="{% url 'home:noticia_detalle' publicacion.pk %}" class="btn btn-sm btn-outline-primary">Leer más</a></p>
 </div>
 </div>
+{% empty %}
 <p>No hay noticias para esta categoría.</p>
+{% endfor %}
 </div>
 </section>
 {% endblock content %}

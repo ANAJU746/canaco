@@ -45,19 +45,25 @@
 <h3 class="mb-4">Entradas Recientes</h3>
 <div class="post-entry-footer">
 <ul>
+{% for noticia in global_recientes %}
 <li>
-<a href="">
-{% comment %} <img src="" alt="" class="me-4 rounded" style="width: 70px; height: 70px; object-fit: cover;"> {% endcomment %}
-<img src="{% static 'images/img_1_sq.jpg' %}" alt="" class="me-4 rounded" style="width: 70px; height: 70px; object-fit: cover;">
+<a href="{% url 'home:noticia_detalle' noticia.id %}">
+{% if noticia.imagen_portada %}
+<img src="{{ noticia.imagen_portada.display_url }}" alt="{{ noticia.titulo }}" class="me-4 rounded" style="width: 70px; height: 70px; object-fit: cover;">
+{% else %}
+<img src="{% static 'images/img_1_sq.jpg' %}" alt="{{ noticia.titulo }}" class="me-4 rounded" style="width: 70px; height: 70px; object-fit: cover;">
+{% endif %}
 <div class="text">
-<h4></h4>
+<h4>{{ noticia.titulo }}</h4>
 <div class="post-meta">
-<span class="mr-2"></span>
+<span class="mr-2">{{ noticia.createdat|date:"d M, Y" }}</span>
 </div>
 </div>
 </a>
 </li>
+{% empty %}
 <li><span class="text-white-50">No hay noticias recientes.</span></li>
+{% endfor %}
 </ul>
 </div>
 </div> <!-- /.widget-->
