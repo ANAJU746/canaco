@@ -70,7 +70,7 @@ Canaco es un sistema web de noticias orientado a medios digitales que permite:
 - HTML5
 - CSS3
 - JavaScript
-- Bootstrap
+- Bootstrap s
 - Django ORM
 
 ## 📁 Estructura del proyecto
